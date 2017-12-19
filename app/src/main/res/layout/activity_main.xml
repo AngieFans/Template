@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical">
+
+    <com.ccmt.template.view.TitleView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <!--
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <com.ccmt.transparentdesktop.MySurfaceView
+            android:id="@+id/previewSV"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="#ff0000" />
+
+    </FrameLayout>-->
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+    </FrameLayout>
+
+    <com.zhy.android.percent.supportnew.PercentLinearLayout
+        android:id="@+id/vg_no_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#00ffff00"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+
+        <ImageView
+            android:layout_width="0dip"
+            android:layout_height="0dip"
+            android:adjustViewBounds="true"
+            android:src="@drawable/traffic_single_empty_box"
+            app:layout_heightPercent="12%sh"
+            app:layout_marginTopPercent="12.4%sh"
+            app:layout_maxHeightPercent="12%sh"
+            app:layout_maxWidthPercent="26.4%sw"
+            app:layout_widthPercent="26.4%sw"
+            tools:ignore="ContentDescription"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/traffic_no_permissions"
+            android:textColor="#676767"
+            android:textSize="18sp"
+            app:layout_marginTopPercent="4.7%sh"
+            />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_go_to_setting"
+            android:layout_width="0dip"
+            android:layout_height="0dip"
+            android:background="@drawable/traffic_single_selector_go_to_setting"
+            android:text="@string/traffic_single_go_to_setting"
+            android:textColor="#333333"
+            android:textSize="16sp"
+            app:layout_heightPercent="5.5%sh"
+            app:layout_marginTopPercent="3.1%sh"
+            app:layout_widthPercent="34.7%sw"
+            />
+
+    </com.zhy.android.percent.supportnew.PercentLinearLayout>
+
+</LinearLayout>

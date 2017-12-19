@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TitleView">
+        <!-- The source view to delegate touch presses events to. -->
+        <attr name="titleTx" format="string"/>
+        <attr name="titleSize" format="integer"/>
+        <attr name="backDrawable" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="TextDrawable">
+        <attr name="bgDrawable" format="reference"/>
+        <attr name="descText" format="string"/>
+        <attr name="basicPointType" format="integer"/>
+        <attr name="basicPointX" format="float"/>
+        <attr name="basicPointY" format="float"/>
+        <attr name="descTextMaxLines" format="integer"/>
+        <attr name="isShowSettingTextView" format="boolean"/>
+    </declare-styleable>
+</resources>

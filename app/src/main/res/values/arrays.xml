@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--TextDrawableView basicPointType-->
+    <integer name="LEFT_TOP">1</integer>
+    <integer name="RIGHT_TOP">2</integer>
+    <integer name="LEFT_BOTTOM">3</integer>
+    <integer name="RIGHT_BOTTOM">4</integer>
+
+</resources>

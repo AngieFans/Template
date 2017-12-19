@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:appMaster="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="horizontal"
+              android:weightSum="2">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/root_install_promp"
+            android:textColor="@color/text_black"
+            android:textSize="11sp"
+            tools:ignore="SmallSp"/>
+
+        <!--basicPointX = (93 + 28 + 28 - 10) * 1.0f / (93 + 28 + 28)= 0.93-->
+        <!--basicPointY = 52 * 1.0f / 179 = 0.29-->
+        <com.ccmt.appmaster.view.TextDrawableView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="11dp"
+            appMaster:basicPointType="@integer/RIGHT_BOTTOM"
+            appMaster:basicPointX="0.93"
+            appMaster:basicPointY="0.29"
+            appMaster:bgDrawable="@drawable/after_root_nav_icon"
+            appMaster:descText="@string/cannot_uninstall_ccmt_hint"
+            appMaster:descTextMaxLines="3"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="@dimen/splitline_height"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="36dp"
+        android:layout_marginTop="71dp"
+        android:background="@color/divider"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/root_uninstall_promp"
+            android:textColor="@color/text_black"
+            android:textSize="11sp"
+            tools:ignore="SmallSp"/>
+
+        <!--basicPointX = (93 + 28 - 10) * 1.0f / (93 + 28 + 28)= 0.745-->
+        <!--basicPointY = 74 * 1.0f / 179 = 0.413-->
+        <com.ccmt.appmaster.view.TextDrawableView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="11dp"
+            appMaster:basicPointType="@integer/RIGHT_TOP"
+            appMaster:basicPointX="0.745"
+            appMaster:basicPointY="0.413"
+            appMaster:bgDrawable="@drawable/how_to_uninstall_ccmt"
+            appMaster:descText="@string/howto_uninstall_ccmt_hint"
+            appMaster:descTextMaxLines="1"
+            appMaster:isShowSettingTextView="true"/>
+    </LinearLayout>
+
+</LinearLayout>

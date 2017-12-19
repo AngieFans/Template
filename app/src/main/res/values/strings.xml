@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Template</string>
+    <string name="error_su">申请ROOT权限被拒绝</string>
+    <string name="model_permissions">1、 避免隐私泄露和财产损失\n2、 保护隐私和财产安全</string>
+    <string name="model_permissions_restart_promp">重启手机才可以生效哦</string>
+    <string name="model_permissions_restart">重启</string>
+    <string name="error_system_app">在当前手机无法提升为系统应用</string>
+    <string name="root_install_promp">使用该功能后:</string>
+    <string name="root_uninstall_promp">怎么删除APPMaster:</string>
+    <string name="root_install_start">开启</string>
+    <string name="root_how_to">怎么ROOT</string>
+    <string name="cannot_uninstall_ccmt_hint">在桌面上不能卸载，\n在App设置中可以卸载。</string>
+    <string name="howto_uninstall_ccmt_hint">点击完成卸载。</string>
+    <string name="default_negative_btn_label">取消</string>
+    <string name="default_positive_btn_label">确定</string>
+    <string name="dialog_no_promp">不再提示</string>
+    <string name="traffic_no_permissions">缺少必要权限无法加载</string>
+    <string name="traffic_single_go_to_setting">前往设置</string>
+    <string name="traffic_single_package_usage_stats_title">查看数据使用量</string>
+    <string name="traffic_single_package_usage_stats_message">正在申请查看数据使用量权限，您是否同意</string>
+    <string name="traffic_single_allow">允许</string>
+    <string name="traffic_single_deny">禁止</string>
+    <string name="dialog_go_to_force_stop_des_line1">手动关闭应用，</string>
+    <string name="dialog_go_to_force_stop_des_line2">您可点击“强行停止”按钮结束应用。</string>
+</resources>

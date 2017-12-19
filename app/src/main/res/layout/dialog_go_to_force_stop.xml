@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.android.percent.supportnew.PercentLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                        xmlns:tools="http://schemas.android.com/tools"
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:gravity="center_horizontal"
+                                                        android:orientation="vertical">
+
+    <com.zhy.android.percent.supportnew.PercentRelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_marginTopPercent="0.3125%sh"
+        >
+
+        <ImageView
+            android:id="@+id/ivHand"
+            android:layout_width="0dip"
+            android:layout_height="0dip"
+            android:layout_gravity="bottom"
+            android:scaleType="fitXY"
+            android:src="@drawable/dialog_go_to_force_stop_hand"
+            app:layout_heightPercent="5.703125%sh"
+            app:layout_widthPercent="6.25%sw"
+            tools:ignore="ContentDescription"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/ivHand"
+            android:layout_gravity="bottom"
+            android:layout_toRightOf="@id/ivHand"
+            android:text="@string/dialog_go_to_force_stop_des_line1"
+            android:textColor="@color/white"
+            app:layout_marginLeftPercent="2.77777777777778%sw"
+            app:layout_textSizePercent="2.8125%sh"
+            tools:ignore="RtlHardcoded"/>
+    </com.zhy.android.percent.supportnew.PercentRelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_go_to_force_stop_des_line2"
+        android:textColor="@color/white"
+        app:layout_marginTopPercent="2.109375%sh"
+        app:layout_textSizePercent="2.8125%sh"
+        />
+
+</com.zhy.android.percent.supportnew.PercentLinearLayout>
