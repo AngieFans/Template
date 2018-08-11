@@ -86,6 +86,9 @@ public class NetUtil {
             // 读取：数据库
             ConnectivityManager connectivityManager = (ConnectivityManager) context
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (connectivityManager == null) {
+                return false;
+            }
             if (Build.VERSION.SDK_INT >= 21) {
                 Network[] networks = connectivityManager.getAllNetworks();
                 NetworkInfo networkInfo;
@@ -153,6 +156,9 @@ public class NetUtil {
 //        return activeNetInfo != null && activeNetInfo.isConnected();
         ConnectivityManager connectivityManager = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager == null) {
+            return false;
+        }
         if (Build.VERSION.SDK_INT >= 21) {
             Network[] networks = connectivityManager.getAllNetworks();
             if (networks == null || networks.length == 0) {
@@ -195,6 +201,9 @@ public class NetUtil {
     public static boolean isMobileConnected(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager == null) {
+            return false;
+        }
         if (Build.VERSION.SDK_INT >= 21) {
             Network[] networks = connectivityManager.getAllNetworks();
             if (networks == null || networks.length == 0) {
@@ -239,6 +248,9 @@ public class NetUtil {
     public static boolean isWapConnected(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager == null) {
+            return false;
+        }
         if (Build.VERSION.SDK_INT >= 21) {
             Network[] networks = connectivityManager.getAllNetworks();
             if (networks == null || networks.length == 0) {
@@ -322,6 +334,9 @@ public class NetUtil {
     public static boolean isGpsEnabled(Context context) {
         LocationManager locationManager = (LocationManager) context
                 .getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager == null) {
+            return false;
+        }
         // 通过GPS卫星定位，定位级别可以精确到街（通过24颗卫星定位，在室外和空旷的地方定位准确、速度快）
         boolean gps = locationManager
                 .isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -404,6 +419,9 @@ public class NetUtil {
         try {
             ConnectivityManager connectivity = (ConnectivityManager) context
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (connectivity == null) {
+                return false;
+            }
             NetworkInfo info = connectivity.getActiveNetworkInfo();
             if (info != null && info.isConnected()) {
                 return true;
@@ -442,6 +460,9 @@ public class NetUtil {
         int result = TYPE_NO_NET;
         ConnectivityManager connMgr = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connMgr == null) {
+            return TYPE_NO_NET;
+        }
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             String extraInfo = networkInfo.getExtraInfo();
@@ -457,8 +478,12 @@ public class NetUtil {
                     || networkInfoType == ConnectivityManager.TYPE_MOBILE_MMS
                     || networkInfoType == ConnectivityManager.TYPE_MOBILE_SUPL) {
                 if (!extraInfo.toLowerCase(Locale.getDefault()).equals("cmwap")) {
-                    int networkType = ((TelephonyManager) context
-                            .getSystemService(Context.TELEPHONY_SERVICE)).getNetworkType();
+                    TelephonyManager telephonyManager = (TelephonyManager) context
+                            .getSystemService(Context.TELEPHONY_SERVICE);
+                    if (telephonyManager == null) {
+                        return TYPE_NO_NET;
+                    }
+                    int networkType = telephonyManager.getNetworkType();
                     Log.i("MyLog", "networkType -> " + networkType);
                     switch (networkType) {
                         case TelephonyManager.NETWORK_TYPE_GPRS:
@@ -509,9 +534,13 @@ public class NetUtil {
      *
      * @return {@code true}: 是<br>{@code false}: 否
      */
+    @SuppressLint("PrivateApi")
     @SuppressWarnings({"TryWithIdenticalCatches", "unused"})
     public static boolean isDataEnabled(Context context) {
         TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        if (tm == null) {
+            return false;
+        }
         try {
             Method getMobileDataEnabledMethod = tm.getClass().getDeclaredMethod("getDataEnabled");
             if (getMobileDataEnabledMethod != null) {
@@ -545,9 +574,13 @@ public class NetUtil {
      *
      * @param enabled {@code true}: 打开<br>{@code false}: 关闭
      */
+    @SuppressLint("PrivateApi")
     @SuppressWarnings({"TryWithIdenticalCatches", "unused"})
     public static void setDataEnabled(Context context, boolean enabled) {
         TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        if (tm == null) {
+            return;
+        }
         try {
             Method setMobileDataEnabledMethod = tm.getClass().getDeclaredMethod("setDataEnabled", boolean.class);
             if (setMobileDataEnabledMethod != null) {

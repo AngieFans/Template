@@ -1,12 +1,14 @@
 package com.ccmt.library.lru;
 
-import com.ccmt.library.global.Global;
+import android.content.Context;
+
 import com.ccmt.library.lru.SoftMap.ICreateObjectAble;
+import com.ccmt.library.util.LogUtil;
 
 import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Map.Entry;
+import java.util.Map;
 
 public class LruMap {
 
@@ -17,15 +19,18 @@ public class LruMap {
 
     private static LruMap instance;
 
+    static String sSerializableFileDir;
+    private static String sSerializableFileDirNotDelete;
+
     /**
      * lru缓存
      */
-    private LinkedHashMap<String, Object> linkedHashMap;
+    LinkedHashMap<String, Object> linkedHashMap;
 
     /**
      * 软引用
      */
-    private SoftMap<String, Object> softMap;
+    SoftMap<String, Object> softMap;
 
     private Runtime runtime;
 
@@ -40,9 +45,15 @@ public class LruMap {
      */
     private String serializableFileDirNotDelete;
 
+    /**
+     * 将lru缓存中最不常用的对象存放到软引用中的次数
+     */
+    private int mSoftCount;
+
     private LruMap() {
         // this(System.getProperty("user.dir") + "/Ser");
-        this(Global.serializableFileDir);
+//        this(Global.serializableFileDir);
+        this(sSerializableFileDir);
     }
 
     private LruMap(String serializableFileDir) {
@@ -51,14 +62,46 @@ public class LruMap {
         this.serializableFileDir = serializableFileDir;
         // this.serializableFileDirNotDelete = System.getProperty("user.dir")
         // + "/SerNotDelete";
-        this.serializableFileDirNotDelete = Global.serializableFileDirNotDelete;
+//        this.serializableFileDirNotDelete = Global.serializableFileDirNotDelete;
+        this.serializableFileDirNotDelete = sSerializableFileDirNotDelete;
+        if (softMap == null) {
+            // softMap = SoftMap.getInstance(serializableFileDir);
+            softMap = SoftMap.getInstance();
+        }
         FileUtil.deleteDir(this.serializableFileDir);
+//        FileUtil.deleteDir(this.serializableFileDirNotDelete);
+    }
+
+    int getSoftCount() {
+        return mSoftCount;
+    }
+
+    public static void init(Context context) {
+//        sSerializableFileDir = context.getFileStreamPath("Ser").getAbsolutePath();
+//        sSerializableFileDirNotDelete = context.getFileStreamPath("SerNotDelete")
+//                .getAbsolutePath();
+//        sSerializableFileDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Ser";
+//        sSerializableFileDirNotDelete = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "SerNotDelete";
+        sSerializableFileDir = context.getFilesDir().getAbsolutePath() + File.separator + "Ser";
+        sSerializableFileDirNotDelete = context.getFilesDir().getAbsolutePath() + File.separator + "SerNotDelete";
+
+        LogUtil.i("sSerializableFileDir -> " + sSerializableFileDir);
+        LogUtil.i("sSerializableFileDirNotDelete -> " + sSerializableFileDirNotDelete);
+        File serializableFileDir = new File(sSerializableFileDir);
+        File serializableFileDirNotDelete = new File(sSerializableFileDirNotDelete);
+        LogUtil.i("serializableFileDir.exists() -> " + serializableFileDir.exists());
+        LogUtil.i("serializableFileDirNotDelete.exists() -> " + serializableFileDirNotDelete.exists());
+        FileUtil.createDir(serializableFileDir, true, true, true, true, true, false);
+        FileUtil.createDir(serializableFileDirNotDelete, true, true, true, true, true, false);
+        LogUtil.i("serializableFileDir.exists() -> " + serializableFileDir.exists());
+        LogUtil.i("serializableFileDirNotDelete.exists() -> " + serializableFileDirNotDelete.exists());
     }
 
     public static LruMap getInstance() {
         return getInstance(null);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static LruMap getInstance(String serializableFileDir) {
         if (instance == null) {
             if (serializableFileDir != null) {
@@ -75,51 +118,86 @@ public class LruMap {
     }
 
     public boolean put(String key, Object value, boolean serialize) {
-        Object obj = linkedHashMap.get(key);
-        if (obj == null) {
-            if (softMap == null) {
-                // softMap = SoftMap.getInstance(serializableFileDir);
-                softMap = SoftMap.getInstance();
-            }
-            if (softMap.obtainElement(key) == null) {
-                if (!isMemreyEnough()) {
-                    // 内存不够
-                    if (!linkedHashMap.isEmpty()) {
-                        Iterator<Entry<String, Object>> ite = linkedHashMap
-                                .entrySet().iterator();
-                        Entry<String, Object> next = ite.next();
+//        Object obj = linkedHashMap.get(key);
+//        if (obj == null) {
+//            if (softMap == null) {
+//                // softMap = SoftMap.getInstance(serializableFileDir);
+//                softMap = SoftMap.getInstance();
+//            }
+//            Object temp = softMap.obtainElement(key);
+//            if (temp == null) {
+//                putOnly(key, value, serialize);
+//                return true;
+//            }
+//            if (!temp.equals(value)) {
+//                putOnly(key, value, serialize);
+//                return true;
+//            }
+//            return false;
+//        } else {
+//            if (!obj.equals(value)) {
+//                putOnly(key, value, serialize);
+//                return true;
+//            }
+//            return false;
+//        }
 
-                        // 把lru缓存中最不常用的元素放到软引用中
-                        softMap.put(next.getKey(), next.getValue());
 
-                        // 把lru缓存中最不常用的元素删除
-                        ite.remove();
+//        Object obj = get(key);
+//        if (obj == null) {
+//            putOnly(key, value, serialize);
+//            return true;
+//        }
+//        if (!obj.equals(value)) {
+//            putOnly(key, value, serialize);
+//            return true;
+//        }
+//        return false;
 
-                        // 把lru缓存中被删除的元素对应的序列化文件删除
-                        deleteSerializableFile(key,
-                                serializableFileDirNotDelete);
+        putOnly(key, value, serialize);
+        return true;
+    }
+
+    private void putOnly(String key, Object value, boolean serialize) {
+        if (!isMemreyEnough()) {
+            // 内存不够
+            if (!linkedHashMap.isEmpty()) {
+                Iterator<Map.Entry<String, Object>> ite = linkedHashMap
+                        .entrySet().iterator();
+                Map.Entry<String, Object> next = ite.next();
+                String key2 = next.getKey();
+                while (key2.equals(key)) {
+                    next = ite.next();
+                    if (next == null) {
+                        linkedHashMap.put(key, value);
+                        if (serialize) {
+                            softMap.serializNotDelete(key, value,
+                                    serializableFileDirNotDelete);
+                        }
+                        return;
                     }
+                    key2 = next.getKey();
                 }
-                linkedHashMap.put(key, value);
-                if (serialize) {
-                    softMap.serializNotDelete(key, value,
-                            serializableFileDirNotDelete);
-                }
-                return true;
-            }
-        } else {
-            if (!obj.equals(value)) {
-                linkedHashMap.put(key, value);
-                if (serialize) {
-                    softMap.serializNotDelete(key, value,
-                            serializableFileDirNotDelete);
-                }
-                return true;
-            } else {
-                return false;
+                mSoftCount++;
+
+                // 把lru缓存中最不常用的元素放到软引用中
+                softMap.put(key2, next.getValue());
+
+                // 把lru缓存中最不常用的元素删除
+//                        ite.remove();
+                linkedHashMap.remove(key2);
+
+                // 把lru缓存中被删除的元素对应的序列化文件删除.但是如果是持久化对象的序列化文件被删除,
+                // 下次启动虚拟机则无法再获取该持久化对象.
+//                deleteSerializableFile(key2,
+//                        serializableFileDirNotDelete);
             }
         }
-        return false;
+        linkedHashMap.put(key, value);
+        if (serialize) {
+            softMap.serializNotDelete(key, value,
+                    serializableFileDirNotDelete);
+        }
     }
 
     public Object remove(String key) {
@@ -133,30 +211,36 @@ public class LruMap {
         if (linkedHashMap.containsKey(key)) {
             return linkedHashMap.remove(key);
         } else {
-            if (softMap == null) {
-                // softMap = SoftMap.getInstance(serializableFileDir);
-                softMap = SoftMap.getInstance();
-            }
             return softMap.remove(key, deleteSerializeFile);
         }
     }
 
     public Object get(String key) {
-        if (linkedHashMap.containsKey(key)) {
-            return linkedHashMap.get(key);
+        Object value = linkedHashMap.get(key);
+        if (value != null) {
+            return value;
         } else {
-            if (softMap == null) {
-                // softMap = SoftMap.getInstance(serializableFileDir);
-                softMap = SoftMap.getInstance();
-            }
-            Object value = softMap.obtainElement(key);
+            value = softMap.obtainElement(key);
+            File f;
             if (value != null) {
+                softMap.remove(key, true);
+                f = new File(serializableFileDirNotDelete + "/"
+                        + key + SoftMap.serializableFileSuffix);
+                if (f.exists()) {
+                    putOnly(key, value, true);
+                } else {
+                    putOnly(key, value, false);
+                }
                 return value;
             }
-            File f = new File(serializableFileDirNotDelete + "/"
+            f = new File(serializableFileDirNotDelete + "/"
                     + key + SoftMap.serializableFileSuffix);
             if (f.exists()) {
-                return softMap.deserializNotDelete(f);
+                value = softMap.deserializNotDelete(f);
+                if (value != null) {
+                    putOnly(key, value, false);
+                }
+                return value;
             }
             return null;
         }
@@ -164,28 +248,16 @@ public class LruMap {
 
     @SuppressWarnings("unused")
     public boolean isSerializable(Object value) {
-        if (softMap == null) {
-            // softMap = SoftMap.getInstance(serializableFileDir);
-            softMap = SoftMap.getInstance();
-        }
         return softMap.serializable(value);
     }
 
     @SuppressWarnings("WeakerAccess")
     public void deleteSerializableFile(String key, String serializablePath) {
-        if (softMap == null) {
-            // softMap = SoftMap.getInstance(serializableFileDir);
-            softMap = SoftMap.getInstance();
-        }
         softMap.deleteSerializableFile(key, serializablePath);
     }
 
     @SuppressWarnings("unused")
     public boolean deleteAllSerializableFile(String serializablePath) {
-        if (softMap == null) {
-            // softMap = SoftMap.getInstance(serializableFileDir);
-            softMap = SoftMap.getInstance();
-        }
         return softMap.deleteAllSerializableFile(serializablePath);
     }
 
@@ -214,27 +286,29 @@ public class LruMap {
                                     ICreateObjectAble<T> createObjectAble, boolean serialize) {
         T t = (T) get(key);
         if (t != null) {
-            // 如果temp集合中存在指定key的talue,就直接返回该talue.
+            // 如果lru缓存,软引用或序列华文件中存在指定key的value,就直接返回该value.
             return t;
         }
+        // lru缓存,软引用或序列华文件中不存在指定key的value.
         try {
             if (cla.isInterface()) {
                 // 如果传进来的是个接口,就根据配置文件,实例化一个该接口的实现类对象.
                 t = BeanFactory.getImpl(cla);
             } else {
-                // 如果传进来的是一个类
-                // 如果传进来的类在之前没有对应的序列化文件存在,那么就直接实例化该类的对象,
-                // 在之后调用put()方法后保存到temp集合中,
-                // 如果该对象自己和父类都没有非静态属性,那么在后续调用put()方法后就不会序列化,
+                // 如果传进来的是一个类,那么就直接实例化该类的对象,
+                // 在之后调用putOnly()方法后保存到temp集合中lru缓存中,
+                // 如果该对象自己和父类都没有非静态属性,那么在后续调用putOnly()方法后就不会序列化,
                 // 否则将序列化到文件中,以后再取该类的对象,
                 // 就不需要再实例化了.
                 t = cla.newInstance();
             }
             if (t != null) {
                 if (serialize) {
-                    put(key, t, true);
+//                    put(key, t, true);
+                    putOnly(key, t, true);
                 } else {
-                    put(key, t);
+//                    put(key, t);
+                    putOnly(key, t, false);
                 }
             }
             return t;
@@ -244,9 +318,9 @@ public class LruMap {
                 t = createObjectAble.createObject();
                 if (t != null) {
                     if (serialize) {
-                        put(key, t, true);
+                        putOnly(key, t, true);
                     } else {
-                        put(key, t);
+                        putOnly(key, t, false);
                     }
                 }
                 return t;
@@ -257,9 +331,9 @@ public class LruMap {
                 t = createObjectAble.createObject();
                 if (t != null) {
                     if (serialize) {
-                        put(key, t, true);
+                        putOnly(key, t, true);
                     } else {
-                        put(key, t);
+                        putOnly(key, t, false);
                     }
                 }
                 return t;

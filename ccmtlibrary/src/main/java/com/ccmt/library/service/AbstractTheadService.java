@@ -20,7 +20,6 @@ public abstract class AbstractTheadService extends AbstractService {
      */
     protected AtomicBoolean mIsExit = new AtomicBoolean(false);
 
-    @SuppressWarnings("unused")
     protected Runnable mRunnable;
 
     @Override
@@ -29,7 +28,6 @@ public abstract class AbstractTheadService extends AbstractService {
         mIsExit.set(true);
     }
 
-    @SuppressWarnings("unused")
     public static void stopThread(Class<? extends AbstractService> cla) {
         AbstractService service = Global.allRunningServices.get(cla);
         if (service != null) {

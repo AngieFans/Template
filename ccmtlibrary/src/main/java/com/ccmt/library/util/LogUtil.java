@@ -53,7 +53,6 @@ import java.util.Map;
  */
 public class LogUtil {
 
-    @SuppressWarnings("WeakerAccess")
     public static boolean sIsDebug;
     private static final String TAG = "MyLog";
 

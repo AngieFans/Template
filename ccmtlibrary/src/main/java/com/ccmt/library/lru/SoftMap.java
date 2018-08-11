@@ -1,6 +1,6 @@
 package com.ccmt.library.lru;
 
-import com.ccmt.library.global.Global;
+import com.ccmt.library.util.LogUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -66,7 +66,7 @@ public class SoftMap<K, V> extends HashMap<K, V> {
      */
     private SoftMap() {
         // this(System.getProperty("user.dir") + "/Ser");
-        this(Global.serializableFileDir);
+        this(LruMap.sSerializableFileDir);
     }
 
     /**
@@ -601,13 +601,20 @@ public class SoftMap<K, V> extends HashMap<K, V> {
             File f = new File(serializableFilePath);
             ObjectInputStream ois = null;
             if (f.exists()) {
+//                LogUtil.i("文件" + f.getAbsolutePath() + "在软引用目录中存在");
                 // 如果传进来的类在之前有对应的序列化文件存在,那么通过反序列化技术,
                 // 产生一个新的对象，在之后调用put()方法后保存到temp集合中,
                 // 并同时重新序列化到文件中.
                 try {
                     ois = new ObjectInputStream(new FileInputStream(f));
                     v = (V) ois.readObject();
-                    putElement(key, v, false);
+
+                    // 从文件反序列化获取的对象重新保存到软引用中
+//                    putElement(key, v, false);
+
+                    // 从软引用反序列化获取的对象保存到lru缓存中
+//                    remove(key, true);
+//                    LruMap.getInstance().putOnly(key.toString(), v, false);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -623,8 +630,15 @@ public class SoftMap<K, V> extends HashMap<K, V> {
                         }
                     }
                 }
+            } else {
+                LogUtil.e("文件" + f.getAbsolutePath() + "在软引用目录中不存在");
             }
         }
+//        else {
+//            // 从软引用反序列化获取的对象保存到lru缓存中
+//            remove(key, true);
+//            LruMap.getInstance().putOnly(key.toString(), v, false);
+//        }
         return v;
     }
 

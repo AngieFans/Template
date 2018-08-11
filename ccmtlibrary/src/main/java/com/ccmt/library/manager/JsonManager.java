@@ -3,15 +3,16 @@ package com.ccmt.library.manager;
 import android.util.Log;
 
 import com.ccmt.library.lru.LruMap;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
+import com.google.gsonnew.Gson;
+import com.google.gsonnew.GsonBuilder;
+import com.google.gsonnew.JsonDeserializationContext;
+import com.google.gsonnew.JsonDeserializer;
+import com.google.gsonnew.JsonElement;
+import com.google.gsonnew.JsonParseException;
+import com.google.gsonnew.JsonPrimitive;
+import com.google.gsonnew.JsonSerializationContext;
+import com.google.gsonnew.JsonSerializer;
+import com.google.gsonnew.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.text.ParseException;
@@ -182,6 +183,7 @@ public class JsonManager {
         return gson.toJson(ts);
     }
 
+    @SuppressWarnings("unused")
     public <T> String toJson(T ts, String dateformat) {
         return gsonBuilder.setDateFormat(dateformat).create().toJson(ts);
     }
@@ -192,7 +194,7 @@ public class JsonManager {
 
     public <T> List<T> fromJsonAsList(String jsonStr) {
         return fromJson(jsonStr,
-                new com.google.gson.reflect.TypeToken<List<T>>() {
+                new TypeToken<List<T>>() {
                 }.getType());
     }
 
@@ -204,7 +206,7 @@ public class JsonManager {
     @SuppressWarnings("WeakerAccess")
     public <K, V> Map<K, V> fromJsonAsMap(String jsonStr) {
         return gson.fromJson(jsonStr,
-                new com.google.gson.reflect.TypeToken<Map<K, V>>() {
+                new TypeToken<Map<K, V>>() {
                 }.getType());
     }
 

@@ -5,11 +5,12 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 
+import com.ccmt.library.lru.LruMap;
+import com.ccmt.library.util.LogUtil;
 import com.ccmt.template.accessibility.AccessibilityHelper;
 import com.ccmt.template.accessibility.job.IAccessibilityJob;
 import com.ccmt.template.accessibility.notifycation.AbstractNotificationService;
 import com.ccmt.template.accessibility.notifycation.IStatusBarNotification;
-import com.ccmt.library.lru.LruMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;

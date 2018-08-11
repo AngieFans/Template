@@ -12,6 +12,7 @@ public class FileUtil {
         File dir = new File(dirPath);
         if (dir.exists() && dir.isDirectory()) {
             deleteFile(dir);
+
             // 目录中的所有子目录和文件删除完后,可以删除空目录,也可以不删除空目录.
             return dir.delete();
         }
@@ -25,7 +26,9 @@ public class FileUtil {
             if (children != null) {
                 for (File f : children) {
                     deleteFile(f);
-                    f.delete();
+                    if (f.isDirectory()) {
+                        f.delete();
+                    }
                 }
             }
         } else {
@@ -126,8 +129,8 @@ public class FileUtil {
         }
     }
 
-    public static void createParentFile(File file, boolean readable, boolean writable, boolean executable, boolean readableOwnerOnly,
-                                        boolean writableOwnerOnly, boolean executableOwnerOnly) {
+    private static void createParentFile(File file, boolean readable, boolean writable, boolean executable, boolean readableOwnerOnly,
+                                         boolean writableOwnerOnly, boolean executableOwnerOnly) {
         File parentFile = file.getParentFile();
         if (!parentFile.exists()) {
             parentFile.mkdirs();
@@ -135,19 +138,19 @@ public class FileUtil {
         }
     }
 
-    public static void createParentFile(File file, boolean ownerOnly) {
+    private static void createParentFile(File file, boolean ownerOnly) {
         createParentFile(file, true, true, true, ownerOnly, ownerOnly, ownerOnly);
     }
 
-    public static void createParentFile(String path, boolean ownerOnly) {
+    private static void createParentFile(String path, boolean ownerOnly) {
         createParentFile(new File(path), true, true, true, ownerOnly, ownerOnly, ownerOnly);
     }
 
-    public static void createParentFile(File file) {
+    private static void createParentFile(File file) {
         createParentFile(file, true, true, true, true, true, true);
     }
 
-    public static void createParentFile(String path) {
+    private static void createParentFile(String path) {
         createParentFile(new File(path), true, true, true, true, true, true);
     }
 

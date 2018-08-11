@@ -20,7 +20,7 @@ public class ThreadManager {
     /**
      * UI主线程
      */
-    private static final int THREAD_UI = 0;
+    public static final int THREAD_UI = 0;
     /**
      * IO线程，主要执行费时操作
      */
@@ -46,6 +46,7 @@ public class ThreadManager {
     private static ExecutorService sExecutorService;
 
     public ThreadManager() {
+
     }
 
     public static void startup() {

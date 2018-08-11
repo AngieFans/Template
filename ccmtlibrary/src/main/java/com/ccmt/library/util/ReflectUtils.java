@@ -159,7 +159,7 @@ public class ReflectUtils {
         return result;
     }
 
-    @SuppressWarnings({"TryWithIdenticalCatches", "WeakerAccess"})
+    @SuppressWarnings("TryWithIdenticalCatches")
     public static void setNonStaticFieldValue(Class<?> cla, Object obj, String fieldName, Object value) {
         if (cla == null) {
             cla = obj.getClass();
@@ -221,7 +221,7 @@ public class ReflectUtils {
         }
     }
 
-    @SuppressWarnings({"unused", "TryWithIdenticalCatches"})
+    @SuppressWarnings("TryWithIdenticalCatches")
     public static void setStaticFieldValues(Class<?> cla, Object value) {
         Field[] fs = cla.getDeclaredFields();
         if (fs != null) {
@@ -301,7 +301,6 @@ public class ReflectUtils {
         return null;
     }
 
-    @SuppressWarnings("unused")
     public static Object invokeStaticMethod(Class<?> cla, String name, Class[] parameterTypes,
                                             Object... parameterValues) {
         return invokeStaticMethod(cla, name, parameterTypes, null, parameterValues);
@@ -346,7 +345,6 @@ public class ReflectUtils {
         return null;
     }
 
-    @SuppressWarnings("unused")
     public static Object invokeNonStaticMethod(Object obj, String methodName, Class[] parameterTypes,
                                                Object... parameterValues) {
         return invokeNonStaticMethod(obj, methodName, parameterTypes, null, parameterValues);

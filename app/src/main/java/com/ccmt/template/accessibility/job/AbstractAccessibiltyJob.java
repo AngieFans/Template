@@ -13,6 +13,7 @@ import android.support.annotation.RequiresApi;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
+import com.ccmt.library.util.LogUtil;
 import com.ccmt.template.CcmtApplication;
 import com.ccmt.template.R;
 import com.ccmt.template.accessibility.Config;
