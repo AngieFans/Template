@@ -9,16 +9,15 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-/**
- * @author myx
- *         by 2017-08-21
- */
 public abstract class AbstractAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
 
-    private List<T> mList;
-    private OnRecyclerViewItemClickListener mOnItemClickListener;
-    @SuppressWarnings({"FieldCanBeLocal", "unused"})
-    private OnCheckNotAllNotify mNotify;
+    protected Context mContext;
+    @SuppressWarnings("WeakerAccess")
+    protected List<T> mList;
+    @SuppressWarnings("WeakerAccess")
+    protected OnRecyclerViewItemClickListener mOnItemClickListener;
+    @SuppressWarnings("WeakerAccess")
+    protected OnCheckNotAllNotify mNotify;
 
     /**
      * item类型
@@ -35,18 +34,34 @@ public abstract class AbstractAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     /**
      * 底部View个数
      */
-    private int mBottomCount = 0;
+    private int mFooterCount = 0;
 
-    private LayoutInflater mLayoutInflater;
-
-    @SuppressWarnings("unused")
-    private Typeface mTypeface;
+    @SuppressWarnings("WeakerAccess")
+    protected LayoutInflater mLayoutInflater;
 
     @SuppressWarnings("unused")
-    public AbstractAdapter(Context context, List<T> datas) {
+    protected Typeface mTypeface;
+
+    protected AbstractAdapter(Context context, List<T> datas, int headerCount, int footerCount) {
+        mContext = context;
         mLayoutInflater = LayoutInflater.from(context);
         mList = datas;
+        mHeaderCount = headerCount;
+        mFooterCount = footerCount;
 //        mTypeface = CommonUtil.getSourceTypeFont(mContext);
+    }
+
+    protected AbstractAdapter(Context context, List<T> datas) {
+        this(context, datas, 0, 0);
+    }
+
+    /**
+     * 在Activity和Fragment的onDestory()方法中调用,确保不会造成该类对象的内存泄露.
+     */
+    @SuppressWarnings("unused")
+    public void release() {
+        mContext = null;
+        mLayoutInflater = null;
     }
 
     public void setList(List<T> datas) {
@@ -77,7 +92,7 @@ public abstract class AbstractAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     @Override
     public int getItemCount() {
 //        return mList.size();
-        return mHeaderCount + getContentItemCount() + mBottomCount;
+        return mHeaderCount + getContentItemCount() + mFooterCount;
     }
 
     /**
@@ -109,7 +124,7 @@ public abstract class AbstractAdapter<T> extends RecyclerView.Adapter<RecyclerVi
      */
     @SuppressWarnings("JavaDoc")
     private boolean isBottomView(int position) {
-        return mBottomCount != 0 && position >= (mHeaderCount + getContentItemCount());
+        return mFooterCount != 0 && position >= (mHeaderCount + getContentItemCount());
     }
 
     @Override
@@ -139,40 +154,39 @@ public abstract class AbstractAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         if (viewType == ITEM_TYPE_HEADER) {
-            return new HeaderViewHolder(mLayoutInflater.inflate(getHeaderLayoutResourceId(), viewGroup, false));
+            return new HeaderViewHolder(getHeaderView());
 //            return null;
         } else if (viewType == ITEM_TYPE_CONTENT) {
-            View view = mLayoutInflater.inflate(getContentLayoutResourceId(), viewGroup, false);
+            View view = getContentView();
             //            if (Build.VERSION.SDK_INT >= 21) {
 //                view.setBackgroundResource(R.drawable.recycleritem_bg);
 //            }
-            return new ViewHolder(view);
+            return new ContentViewHolder(view);
         } else if (viewType == ITEM_TYPE_BOTTOM) {
-            return new BottomViewHolder(mLayoutInflater.inflate(getBottomLayoutResourceId(), viewGroup, false));
+            return new FooterViewHolder(getBottomView());
 //            return null;
         }
 //        return new BottomViewHolderNone(mLayoutInflater.inflate(R.layout.processcolum_item_bottom_none, viewGroup, false));
         return null;
     }
 
-    @SuppressWarnings("WeakerAccess")
-    protected abstract int getContentLayoutResourceId();
+    protected abstract View getContentView();
 
-    @SuppressWarnings("WeakerAccess")
-    protected abstract int getHeaderLayoutResourceId();
+    protected abstract View getHeaderView();
 
-    @SuppressWarnings("WeakerAccess")
-    protected abstract int getBottomLayoutResourceId();
+    protected abstract View getBottomView();
 
     /**
      * 将数据与界面进行绑定的操作
      *
-     * @param viewHolderRecycler
+     * @param viewHolder
      * @param position
      */
     @SuppressWarnings({"JavaDoc", "InfiniteRecursion"})
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolderRecycler, int position) {
-        if (viewHolderRecycler instanceof ViewHolder) {
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        viewHolder.itemView.setTag(position);
+
+        if (viewHolder instanceof ContentViewHolder) {
 //            // 将数据保存在button的Tag中,以便点击时进行获取.
 //            viewHolder.mBtnStop.setTag(position - 1);
 //
@@ -183,24 +197,29 @@ public abstract class AbstractAdapter<T> extends RecyclerView.Adapter<RecyclerVi
 
 //            viewHolder.mTextView.setText(mList.get(position).description);
 
-            onBindViewHolderNew((ViewHolder) viewHolderRecycler, position);
-        }
-//        else if (viewHolder_Recycler instanceof HeaderViewHolder) {
+            onBindViewHolderContent((ContentViewHolder) viewHolder, position);
+        } else if (viewHolder instanceof HeaderViewHolder) {
 //            HeaderViewHolder viewHolder = (HeaderViewHolder) viewHolder_Recycler;
 //            String coutstring = mContext.getResources().getString(R.string.activity_detect_network_app);
 //            String result = String.format(coutstring, mList.size());
 //            viewHolder.mTextView_cout.setText(result);
-//        }
+            onBindViewHolderHeader((HeaderViewHolder) viewHolder, position);
+        } else if (viewHolder instanceof FooterViewHolder) {
+            onBindViewHolderFooter((FooterViewHolder) viewHolder, position);
+        }
     }
 
-    @SuppressWarnings("WeakerAccess")
-    protected abstract void onBindViewHolderNew(ViewHolder viewHolder, int position);
+    protected abstract void onBindViewHolderHeader(HeaderViewHolder viewHolder, int position);
+
+    protected abstract void onBindViewHolderContent(ContentViewHolder viewHolder, int position);
+
+    protected abstract void onBindViewHolderFooter(FooterViewHolder viewHolder, int position);
 
     /**
      * 自定义的ViewHolder,持有每个Item的的所有界面元素.
      */
-    private static class ViewHolder extends RecyclerView.ViewHolder {
-        ViewHolder(View view) {
+    static class ContentViewHolder extends RecyclerView.ViewHolder {
+        ContentViewHolder(View view) {
             super(view);
         }
     }
@@ -208,7 +227,7 @@ public abstract class AbstractAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     /**
      * 头部ViewHolder
      */
-    private static class HeaderViewHolder extends RecyclerView.ViewHolder {
+    static class HeaderViewHolder extends RecyclerView.ViewHolder {
         HeaderViewHolder(View itemView) {
             super(itemView);
         }
@@ -217,8 +236,8 @@ public abstract class AbstractAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     /**
      * 底部ViewHolder
      */
-    private static class BottomViewHolder extends RecyclerView.ViewHolder {
-        BottomViewHolder(View itemView) {
+    static class FooterViewHolder extends RecyclerView.ViewHolder {
+        FooterViewHolder(View itemView) {
             super(itemView);
         }
     }
