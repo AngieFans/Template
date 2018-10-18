@@ -3,5 +3,5 @@
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
-/.idea/caches/
+.idea/caches
 .idea/encodings.xml
