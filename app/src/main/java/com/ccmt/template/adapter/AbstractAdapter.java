@@ -22,9 +22,9 @@ public abstract class AbstractAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     /**
      * item类型
      */
-    private static final int ITEM_TYPE_HEADER = 0;
-    private static final int ITEM_TYPE_CONTENT = 1;
-    private static final int ITEM_TYPE_BOTTOM = 2;
+    static final int ITEM_TYPE_HEADER = 0;
+    static final int ITEM_TYPE_CONTENT = 1;
+    static final int ITEM_TYPE_BOTTOM = 2;
 
     /**
      * 头部View个数

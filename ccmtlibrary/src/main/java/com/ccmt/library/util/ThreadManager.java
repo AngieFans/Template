@@ -8,9 +8,6 @@ import java.security.InvalidParameterException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import io.reactivex.Scheduler;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-
 /**
  * 线程管理器，其内线程与进程同生命周期
  */
@@ -20,7 +17,7 @@ public class ThreadManager {
     /**
      * UI主线程
      */
-    public static final int THREAD_UI = 0;
+    private static final int THREAD_UI = 0;
     /**
      * IO线程，主要执行费时操作
      */
@@ -36,7 +33,7 @@ public class ThreadManager {
 
     private static final Handler[] HANDLER_LIST = new Handler[THREAD_SIZE];
 
-    private static final Scheduler[] SCHEDULER_LIST = new Scheduler[THREAD_SIZE];
+//    private static final Scheduler[] SCHEDULER_LIST = new Scheduler[THREAD_SIZE];
 
     private static final String[] THREAD_NAME_LIST
             = new String[]{"thread_ui", "thread_io", "thread_worker"};
@@ -115,22 +112,22 @@ public class ThreadManager {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static Scheduler getScheduler(int index) {
-        if (index >= 0 && index < THREAD_SIZE) {
-            if (SCHEDULER_LIST[index] == null) {
-                synchronized (SCHEDULER_LIST) {
-                    if (SCHEDULER_LIST[index] == null) {
-                        SCHEDULER_LIST[index] =
-                                AndroidSchedulers.from(getHandler(index).getLooper());
-                    }
-                }
-            }
-            return SCHEDULER_LIST[index];
-        } else {
-            throw new InvalidParameterException();
-        }
-    }
+//    @SuppressWarnings("unused")
+//    public static Scheduler getScheduler(int index) {
+//        if (index >= 0 && index < THREAD_SIZE) {
+//            if (SCHEDULER_LIST[index] == null) {
+//                synchronized (SCHEDULER_LIST) {
+//                    if (SCHEDULER_LIST[index] == null) {
+//                        SCHEDULER_LIST[index] =
+//                                AndroidSchedulers.from(getHandler(index).getLooper());
+//                    }
+//                }
+//            }
+//            return SCHEDULER_LIST[index];
+//        } else {
+//            throw new InvalidParameterException();
+//        }
+//    }
 
     private static boolean runningOn(int index) {
         return getHandler(index).getLooper() == Looper.myLooper();

@@ -97,7 +97,7 @@ public class ReflectUtils {
         return result;
     }
 
-    @SuppressWarnings({"TryWithIdenticalCatches", "unused"})
+    @SuppressWarnings("WeakerAccess")
     public static Object obtainStaticFieldValue(Class<?> cla, String fieldName) {
         Object result = null;
         try {
@@ -301,6 +301,7 @@ public class ReflectUtils {
         return null;
     }
 
+    @SuppressWarnings("unused")
     public static Object invokeStaticMethod(Class<?> cla, String name, Class[] parameterTypes,
                                             Object... parameterValues) {
         return invokeStaticMethod(cla, name, parameterTypes, null, parameterValues);
@@ -345,6 +346,7 @@ public class ReflectUtils {
         return null;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static Object invokeNonStaticMethod(Object obj, String methodName, Class[] parameterTypes,
                                                Object... parameterValues) {
         return invokeNonStaticMethod(obj, methodName, parameterTypes, null, parameterValues);
@@ -389,6 +391,25 @@ public class ReflectUtils {
         }
 //        Context context = view.getContext();
 //        LogUtil.i("context -> " + context);
+    }
+
+    @SuppressWarnings("unused")
+    public static void removenFinal(Class<?> cla, String fieldName) {
+        try {
+            Field f = cla.getDeclaredField(fieldName);
+            f.setAccessible(true);
+            // noinspection JavaReflectionMemberAccess
+            Field accessFlagsField = f.getClass().getDeclaredField("accessFlags");
+            accessFlagsField.setAccessible(true);
+            LogUtil.i("f.getModifiers() -> " + f.getModifiers());
+            accessFlagsField.set(f, f.getModifiers() & ~Modifier.FINAL);
+//            setNonStaticFieldValue(f, "accessFlags", f.getModifiers() & ~Modifier.FINAL);
+            LogUtil.i("f.getModifiers() -> " + f.getModifiers());
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
 }
