@@ -11,6 +11,8 @@ import android.os.SystemClock;
 import android.widget.ImageView;
 
 import com.ccmt.library.lru.LruMap;
+import com.ccmt.library.util.LogUtil;
+import com.ccmt.library.util.ThreadManager;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;

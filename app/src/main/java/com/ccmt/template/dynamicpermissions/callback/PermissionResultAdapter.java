@@ -1,8 +1,11 @@
 package com.ccmt.template.dynamicpermissions.callback;
 
+import com.ccmt.library.util.LogUtil;
 import com.ccmt.template.dynamicpermissions.DynamicPermissionManager;
+import com.ccmt.template.dynamicpermissions.PermissionInfo;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 支持任意重写方法,而无需重写所有的方法
@@ -10,23 +13,23 @@ import java.util.Arrays;
 public abstract class PermissionResultAdapter implements PermissionResultCallBack {
 
     @Override
-    public void onPermissionDialogShow() {
-        LogUtil.i("onPermissionDialogShow()");
+    public void onHasPermissionRational(List<PermissionInfo> mPermissionListNeedReq) {
+        LogUtil.i("onHasPermissionRational()");
     }
 
     @Override
-    public void onHasPermissionDenied() {
+    public void onHasPermissionDenied(List<PermissionInfo> mPermissionListDenied) {
         LogUtil.i("onHasPermissionDenied()");
     }
 
     @Override
     public void onPermissionGranted() {
         LogUtil.i("onPermissionGranted()");
-        if (DynamicPermissionManager.sIsHasPermissionsDenyedAtCheck != null
-                && DynamicPermissionManager.sIsHasPermissionsDenyedAtCheck) {
-            DynamicPermissionManager.sIsHasPermissionsDenyedAtCheck = null;
-//            DynamicPermissionManager.sIsShouldGoToAppSetting = null;
-        }
+//        if (DynamicPermissionManager.sIsHasPermissionsDenyedAtCheck != null
+//                && DynamicPermissionManager.sIsHasPermissionsDenyedAtCheck) {
+//            DynamicPermissionManager.sIsHasPermissionsDenyedAtCheck = null;
+////            DynamicPermissionManager.sIsShouldGoToAppSetting = null;
+//        }
     }
 
     @Override

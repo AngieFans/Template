@@ -3,7 +3,7 @@ package com.ccmt.template.traffic;
 import android.content.Context;
 
 import com.ccmt.library.lru.LruMap;
-import com.ccmt.template.activity.AbstractUserPermissionsCheckActivity;
+import com.ccmt.template.dynamicpermissions.activity.AbstractUserPermissionsCheckActivity;
 
 /**
  * @author myx

@@ -13,10 +13,11 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 
 import com.ccmt.library.lru.LruMap;
+import com.ccmt.library.util.LogUtil;
 import com.ccmt.library.util.NetUtil;
 import com.ccmt.library.util.ThreadManager;
 import com.ccmt.template.traffic.TrafficManagerFactory;
-import com.ccmt.template.util.CommonUtil;
+import com.ccmt.template.dynamicpermissions.util.CommonUtil;
 import com.ccmt.template.util.IOUtil;
 
 import java.io.IOException;
@@ -29,7 +30,7 @@ import java.util.Map;
 
 /**
  * @author myx
- *         by 2017-07-21
+ * by 2017-07-21
  */
 public class NetManager {
 

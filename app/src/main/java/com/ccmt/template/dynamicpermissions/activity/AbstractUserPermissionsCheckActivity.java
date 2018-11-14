@@ -1,4 +1,4 @@
-package com.ccmt.template.activity;
+package com.ccmt.template.dynamicpermissions.activity;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,14 +9,17 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.ccmt.library.lru.LruMap;
+import com.ccmt.library.util.LogUtil;
+import com.ccmt.library.util.ThreadManager;
 import com.ccmt.library.util.ViewUtil;
 import com.ccmt.template.R;
+import com.ccmt.template.activity.AbstractActivity;
 import com.ccmt.template.appopspermissions.PermissionsUtil;
 import com.ccmt.template.dynamicpermissions.DynamicPermissionManager;
 import com.ccmt.template.dynamicpermissions.callback.PermissionResultAdapter;
-import com.ccmt.template.util.DialogFractory;
-import com.ccmt.template.util.ObjectUtil;
-import com.ccmt.template.view.CustomAlertDialog;
+import com.ccmt.template.dynamicpermissions.util.DialogFractory;
+import com.ccmt.template.dynamicpermissions.util.ObjectUtil;
+import com.ccmt.template.dynamicpermissions.view.CustomAlertDialog;
 
 public abstract class AbstractUserPermissionsCheckActivity extends AbstractActivity {
 

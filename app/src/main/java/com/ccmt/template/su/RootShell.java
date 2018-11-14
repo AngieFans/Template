@@ -25,7 +25,8 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 
-import com.ccmt.template.util.DialogFractory;
+import com.ccmt.library.util.LogUtil;
+import com.ccmt.template.dynamicpermissions.util.DialogFractory;
 
 import java.util.ArrayList;
 import java.util.Date;

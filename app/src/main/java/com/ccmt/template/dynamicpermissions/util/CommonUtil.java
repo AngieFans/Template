@@ -1,4 +1,5 @@
-package com.ccmt.template.util;
+
+package com.ccmt.template.dynamicpermissions.util;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -21,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.ccmt.library.util.LogUtil;
 import com.ccmt.library.util.ViewUtil;
 import com.ccmt.template.CcmtApplication;
 import com.ccmt.template.R;
@@ -29,7 +31,8 @@ import com.ccmt.template.net.NetManager;
 import com.ccmt.template.traffic.ITrafficManager;
 import com.ccmt.template.traffic.TrafficManagerFactory;
 import com.ccmt.template.traffic.domain.ProcessInfo;
-import com.ccmt.template.view.CustomAlertDialog;
+import com.ccmt.template.util.NavigationBarManager;
+import com.ccmt.template.dynamicpermissions.view.CustomAlertDialog;
 import com.jaredrummler.android.processes.ProcessManager;
 import com.jaredrummler.android.processes.models.AndroidAppProcess;
 
@@ -83,11 +86,11 @@ public class CommonUtil {
         }
     }
 
-    @SuppressWarnings({"unchecked", "TryWithIdenticalCatches"})
     public static Activity obtainTopActivity() {
         Activity topActivity = null;
         try {
-            Class activityThreadClass = Class.forName("android.app.ActivityThread");
+            @SuppressLint("PrivateApi") Class activityThreadClass = Class.forName("android.app.ActivityThread");
+            // noinspection unchecked
             Method getATMethod = activityThreadClass.getDeclaredMethod("currentActivityThread");
             Field activitiesField = activityThreadClass.getDeclaredField("mActivities");
             Object activityThread = getATMethod.invoke(null);
@@ -100,7 +103,7 @@ public class CommonUtil {
                 }
                 Object activityClientRecord = activites.valueAt(0);
 
-                Class activityClientRecordClass = Class.forName("android.app.ActivityThread$ActivityClientRecord");
+                @SuppressLint("PrivateApi") Class activityClientRecordClass = Class.forName("android.app.ActivityThread$ActivityClientRecord");
                 Field activityField = activityClientRecordClass.getDeclaredField("activity");
                 activityField.setAccessible(true);
                 topActivity = (Activity) activityField.get(activityClientRecord);

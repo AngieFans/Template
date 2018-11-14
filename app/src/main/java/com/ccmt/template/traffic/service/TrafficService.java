@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.ccmt.library.service.AbstractTheadService;
 import com.ccmt.library.util.ThreadManager;
 import com.ccmt.template.CcmtApplication;
-import com.ccmt.template.util.CommonUtil;
+import com.ccmt.template.dynamicpermissions.util.CommonUtil;
 
 import java.util.List;
 

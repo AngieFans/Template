@@ -1,4 +1,4 @@
-package com.ccmt.template.activity;
+package com.ccmt.template.dynamicpermissions.activity;
 
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -7,13 +7,15 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.ccmt.library.lru.LruMap;
+import com.ccmt.library.util.LogUtil;
 import com.ccmt.library.util.ViewUtil;
 import com.ccmt.template.R;
+import com.ccmt.template.activity.AbstractActivity;
 import com.ccmt.template.dynamicpermissions.DynamicPermissionManager;
-import com.ccmt.template.util.DialogFractory;
-import com.ccmt.template.util.ObjectUtil;
-import com.ccmt.template.view.CustomAlertDialog;
-import com.ccmt.template.view.LoadingView;
+import com.ccmt.template.dynamicpermissions.util.DialogFractory;
+import com.ccmt.template.dynamicpermissions.util.ObjectUtil;
+import com.ccmt.template.dynamicpermissions.view.CustomAlertDialog;
+import com.ccmt.template.dynamicpermissions.view.LoadingView;
 
 public class ProgressbarActivity extends AbstractActivity {
 
@@ -197,6 +199,7 @@ public class ProgressbarActivity extends AbstractActivity {
                                 LogUtil.i("只是弹出了动态权限对话框,用户没有点确认或取消.");
                                 CustomAlertDialog permissionsDialog = (CustomAlertDialog) lruMap.get("permissionsDialog");
                                 if (permissionsDialog != null) {
+                                    LogUtil.i("如果存在被用户拒绝,且点了不再提示的权限,弹出对话框让用户选择是否跳转到应用的权限设置界面.");
                                     permissionsDialog.show();
                                 } else {
                                     DialogFractory.closeProgressDialog(this);

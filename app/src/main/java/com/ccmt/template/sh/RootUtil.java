@@ -6,7 +6,7 @@ import android.os.Looper;
 import android.view.View;
 
 import com.ccmt.library.util.ThreadManager;
-import com.ccmt.template.util.DialogFractory;
+import com.ccmt.template.dynamicpermissions.util.DialogFractory;
 
 import java.util.ArrayList;
 import java.util.Collections;

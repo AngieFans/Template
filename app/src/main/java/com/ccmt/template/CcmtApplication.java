@@ -4,9 +4,9 @@ import android.app.Application;
 import android.os.Handler;
 import android.os.Process;
 
-import com.ccmt.library.global.Global;
+import com.ccmt.library.util.LogUtil;
 import com.ccmt.library.util.ThreadManager;
-import com.ccmt.template.util.CommonUtil;
+import com.ccmt.template.dynamicpermissions.util.CommonUtil;
 import com.ccmt.template.util.SystemUtil;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -62,9 +62,9 @@ public class CcmtApplication extends Application {
 
         LogUtil.i("WifiAccelerateApplication onCreate()");
 
-        Global.serializableFileDir = getFileStreamPath("Ser").getAbsolutePath();
-        Global.serializableFileDirNotDelete = getFileStreamPath("SerNotDelete")
-                .getAbsolutePath();
+//        Global.serializableFileDir = getFileStreamPath("Ser").getAbsolutePath();
+//        Global.serializableFileDirNotDelete = getFileStreamPath("SerNotDelete")
+//                .getAbsolutePath();
         // Global.serializableFileDir = getFilesDir().getAbsolutePath()
         // + File.separator + "Ser";
         // Global.serializableFileDirNotDelete = getFilesDir().getAbsolutePath()

@@ -14,8 +14,8 @@ import com.ccmt.library.lru.LruMap;
 import com.ccmt.library.util.ThreadManager;
 import com.ccmt.template.CcmtApplication;
 import com.ccmt.template.R;
-import com.ccmt.template.util.CommonUtil;
-import com.ccmt.template.util.DialogFractory;
+import com.ccmt.template.dynamicpermissions.util.CommonUtil;
+import com.ccmt.template.dynamicpermissions.util.DialogFractory;
 import com.ccmt.template.util.ToastUtil;
 import com.stericson.RootTools.RootTools;
 

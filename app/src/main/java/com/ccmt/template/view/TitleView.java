@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ccmt.library.util.LogUtil;
 import com.ccmt.template.R;
 import com.ccmt.template.activity.AbstractActivity;
 import com.zhy.android.percent.supportnew.PercentLinearLayout;

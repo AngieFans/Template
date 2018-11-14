@@ -42,7 +42,7 @@
             android:value="${UMENG_CHANNEL_VALUE}"/>
 
         <activity
-            android:name="com.ccmt.template.activity.ProgressbarActivity"
+            android:name="com.ccmt.template.dynamicpermissions.activity.ProgressbarActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/custom_progressbar_activity"/>

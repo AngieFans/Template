@@ -10,7 +10,7 @@ import com.ccmt.library.exception.ShellOnMainThreadException;
 import com.ccmt.library.lru.LruMap;
 import com.ccmt.library.util.ThreadManager;
 import com.ccmt.template.R;
-import com.ccmt.template.util.DialogFractory;
+import com.ccmt.template.dynamicpermissions.util.DialogFractory;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

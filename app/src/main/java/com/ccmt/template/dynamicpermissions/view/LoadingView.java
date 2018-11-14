@@ -1,4 +1,4 @@
-package com.ccmt.template.view;
+package com.ccmt.template.dynamicpermissions.view;
 
 import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;

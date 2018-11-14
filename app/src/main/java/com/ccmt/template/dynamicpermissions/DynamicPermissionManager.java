@@ -2,22 +2,20 @@ package com.ccmt.template.dynamicpermissions;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
-import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 
 import com.ccmt.library.lru.LruMap;
+import com.ccmt.library.util.LogUtil;
 import com.ccmt.template.CcmtApplication;
-import com.ccmt.template.activity.AbstractUserPermissionsCheckActivity;
 import com.ccmt.template.dynamicpermissions.callback.PermissionOriginResultCallBack;
 import com.ccmt.template.dynamicpermissions.callback.PermissionResultCallBack;
-import com.ccmt.template.util.CommonUtil;
-import com.ccmt.template.util.DialogFractory;
-import com.ccmt.template.view.CustomAlertDialog;
+import com.ccmt.template.dynamicpermissions.util.CommonUtil;
+import com.ccmt.template.dynamicpermissions.util.DialogFractory;
+import com.ccmt.template.dynamicpermissions.view.CustomAlertDialog;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,10 +42,10 @@ public class DynamicPermissionManager {
 
     public static Boolean sIsShouldGoToAppSetting = true;
 
-    /**
-     * 在检测过程中是否有权限被拒绝,如果有,代表不是所有申请的权限都被允许.
-     */
-    public static Boolean sIsHasPermissionsDenyedAtCheck;
+//    /**
+//     * 在检测过程中是否有权限被拒绝,如果有,代表不是所有申请的权限都被允许.
+//     */
+//    public static Boolean sIsHasPermissionsDenyedAtCheck;
 
     private PermissionResultCallBack mPermissionResultCallBack;
     private PermissionOriginResultCallBack mPermissionOriginResultCallBack;
@@ -113,10 +111,6 @@ public class DynamicPermissionManager {
 
     /**
      * 检查多个权限的状态,不会进行权限的申请.(当应用第一次安装的时候,不会有rational的值,此时返回均是denied)
-     *
-     * @param permissions The name of the permission being checked.
-     * @return Map<String, List<PermissionInfo>> or {@code null}
-     * if context is not instanceof Activity or topActivity can not be find
      */
     @SuppressWarnings("JavaDoc")
     private Map<String, List<PermissionInfo>> checkMultiPermissions(String... permissions) {
@@ -156,6 +150,10 @@ public class DynamicPermissionManager {
 //            map.put(PERMISSIONS_DENIED, mPermissionListDenied);
 //        }
 
+        if (mPermissionListAccepted.size() > 0 && mPermissionListNeedReq.size() == 0 && mPermissionListDenied.size() == 0) {
+            return null;
+        }
+
         return new HashMap<>();
     }
 
@@ -168,7 +166,7 @@ public class DynamicPermissionManager {
      * @param permissionResultCallBack
      * @param permissionOriginResultCallBack
      */
-    @SuppressWarnings("JavaDoc")
+    @SuppressWarnings({"JavaDoc", "SameParameterValue"})
     private void request(Activity activity, String[] permissions, PermissionResultCallBack permissionResultCallBack,
                          PermissionOriginResultCallBack permissionOriginResultCallBack) {
         if (!checkSituation(permissions, permissionResultCallBack, permissionOriginResultCallBack)) {
@@ -213,44 +211,48 @@ public class DynamicPermissionManager {
         request(activity, permissions, permissionResultCallBack, null);
     }
 
-    /**
-     * 请求权限核心方法,打开新的Activity,用新的Activity作为媒介来申请动态权限.给服务和广播接收者用,
-     * 当然也可以给正在显示的Activity用,也就是说,该方法通用.
-     * 注意,请在主线程调用.
-     *
-     * @param permissions
-     * @param permissionResultCallBack
-     * @param permissionOriginResultCallBack
-     */
-    @SuppressWarnings("JavaDoc")
-    private void request(String[] permissions, PermissionResultCallBack permissionResultCallBack,
-                         PermissionOriginResultCallBack permissionOriginResultCallBack) {
-        if (!checkSituation(permissions, permissionResultCallBack, permissionOriginResultCallBack)) {
-            mPermissionOriginResultCallBack = null;
-            mPermissionResultCallBack = null;
-            return;
-        }
-
-        LogUtil.i("mContext -> " + mContext);
-
-        sType = TYPE_NOT_ACTIVITY;
-
-        LruMap.getInstance().put("requestPermissionsRunnable", (Runnable) () -> doRequest(permissions));
-        DialogFractory.showProgressDialog(CcmtApplication.application, false);
+    public void request(Fragment fragment, String[] permissions, PermissionResultCallBack permissionResultCallBack) {
+        request(fragment.getActivity(), permissions, permissionResultCallBack, null);
     }
 
-    /**
-     * 请求权限核心方法,打开新的Activity,用新的Activity作为媒介来申请动态权限.给服务和广播接收者用.
-     * 当然也可以给正在显示的Activity用,也就是说,该方法通用.
-     * 注意,请在主线程调用.
-     *
-     * @param permissions
-     * @param permissionResultCallBack
-     */
-    @SuppressWarnings({"JavaDoc", "unused"})
-    private void request(String[] permissions, PermissionResultCallBack permissionResultCallBack) {
-        request(permissions, permissionResultCallBack, null);
-    }
+//    /**
+//     * 请求权限核心方法,打开新的Activity,用新的Activity作为媒介来申请动态权限.给服务和广播接收者用,
+//     * 当然也可以给正在显示的Activity用,也就是说,该方法通用.
+//     * 注意,请在主线程调用.
+//     *
+//     * @param permissions
+//     * @param permissionResultCallBack
+//     * @param permissionOriginResultCallBack
+//     */
+//    @SuppressWarnings("JavaDoc")
+//    private void request(String[] permissions, PermissionResultCallBack permissionResultCallBack,
+//                         PermissionOriginResultCallBack permissionOriginResultCallBack) {
+//        if (!checkSituation(permissions, permissionResultCallBack, permissionOriginResultCallBack)) {
+//            mPermissionOriginResultCallBack = null;
+//            mPermissionResultCallBack = null;
+//            return;
+//        }
+//
+//        LogUtil.i("mContext -> " + mContext);
+//
+//        sType = TYPE_NOT_ACTIVITY;
+//
+//        LruMap.getInstance().put("requestPermissionsRunnable", (Runnable) () -> doRequest(permissions));
+//        DialogFractory.showProgressDialog(CcmtApplication.application, false);
+//    }
+
+//    /**
+//     * 请求权限核心方法,打开新的Activity,用新的Activity作为媒介来申请动态权限.给服务和广播接收者用.
+//     * 当然也可以给正在显示的Activity用,也就是说,该方法通用.
+//     * 注意,请在主线程调用.
+//     *
+//     * @param permissions
+//     * @param permissionResultCallBack
+//     */
+//    @SuppressWarnings({"JavaDoc", "unused"})
+//    private void request(String[] permissions, PermissionResultCallBack permissionResultCallBack) {
+//        request(permissions, permissionResultCallBack, null);
+//    }
 
 //    /**
 //     * 暂时用不上,用来显示所申请的被用户允许,拒绝未点不再提示和拒绝点了不再提示的动态权限信息.
@@ -274,28 +276,33 @@ public class DynamicPermissionManager {
             LogUtil.i("Arrays.toString(mPermissions) -> " + Arrays.toString(mPermissions));
             LogUtil.i("mContext -> " + mContext);
 
-            boolean falg = false;
+//            boolean falg = false;
             if (mPermissionListDenied.size() > 0) {
-                falg = true;
-                if (mContext instanceof AbstractUserPermissionsCheckActivity) {
-                    if (((AbstractUserPermissionsCheckActivity) mContext).mIsClickButton) {
-                        mPermissionResultCallBack.onHasPermissionDenied();
-                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-//                        intent.setComponent(new ComponentName("com.android.settings",
-//                                "com.android.settings.applications.InstalledAppDetails"));
-                        intent.setData(Uri.parse("package:" + mContext.getPackageName()));
-                        mContext.startActivity(intent);
-                        return;
-                    }
+//                falg = true;
+//                if (mContext instanceof AbstractUserPermissionsCheckActivity) {
+//                    if (((AbstractUserPermissionsCheckActivity) mContext).mIsClickButton) {
+//                        mPermissionResultCallBack.onHasPermissionDenied();
+//                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+////                        intent.setComponent(new ComponentName("com.android.settings",
+////                                "com.android.settings.applications.InstalledAppDetails"));
+//                        intent.setData(Uri.parse("package:" + mContext.getPackageName()));
+//                        mContext.startActivity(intent);
+//                        return;
+//                    }
+//                }
+                if (mPermissionResultCallBack != null) {
+                    mPermissionResultCallBack.onHasPermissionDenied(mPermissionListDenied);
                 }
             }
 
             if (mPermissionListNeedReq.size() > 0) {
-                falg = true;
-                mPermissionResultCallBack.onPermissionDialogShow();
+//                falg = true;
+                if (mPermissionResultCallBack != null) {
+                    mPermissionResultCallBack.onHasPermissionRational(mPermissionListNeedReq);
+                }
             }
 
-            sIsHasPermissionsDenyedAtCheck = falg;
+//            sIsHasPermissionsDenyedAtCheck = falg;
 
             ActivityCompat.requestPermissions(mContext, mPermissions, PERMISSION_REQUEST_CODE);
         } else {
@@ -312,12 +319,11 @@ public class DynamicPermissionManager {
             }
 
             if (LruMap.getInstance().get("requestPermissionsRunnable") != null) {
-                DialogFractory.closeProgressDialog(CcmtApplication.application);
+                DialogFractory.closeProgressDialog(mContext);
             } else {
 //            mContext = null;
                 reset();
             }
-
         }
     }
 
@@ -367,14 +373,15 @@ public class DynamicPermissionManager {
 
         int needReqSize = mPermissionListNeedReq.size();
         int deniedSize = mPermissionListDenied.size();
+        // noinspection RedundantIfStatement
         if (needReqSize > 0 || deniedSize > 0) {
-            mPermissions = new String[needReqSize + deniedSize];
-            for (int i = 0; i < needReqSize; i++) {
-                mPermissions[i] = mPermissionListNeedReq.get(i).getName();
-            }
-            for (int i = needReqSize; i < mPermissions.length; i++) {
-                mPermissions[i] = mPermissionListDenied.get(i - needReqSize).getName();
-            }
+//            mPermissions = new String[needReqSize + deniedSize];
+//            for (int i = 0; i < needReqSize; i++) {
+//                mPermissions[i] = mPermissionListNeedReq.get(i).getName();
+//            }
+//            for (int i = needReqSize; i < mPermissions.length; i++) {
+//                mPermissions[i] = mPermissionListDenied.get(i - needReqSize).getName();
+//            }
             return true;
         }
 //        int needReqSize = mPermissionListNeedReq.size();
@@ -435,53 +442,53 @@ public class DynamicPermissionManager {
             }
 
             LruMap lruMap = LruMap.getInstance();
-            List<PermissionInfo> permissionListAccepted = (List<PermissionInfo>) lruMap.get("permissionListAccepted");
-            if (permissionListAccepted == null) {
-                permissionListAccepted = new ArrayList<>();
-            }
-            List<PermissionInfo> permissionListNeedReq = (List<PermissionInfo>) lruMap.get("permissionListNeedReq");
-            if (permissionListNeedReq == null) {
-                permissionListNeedReq = new ArrayList<>();
-            }
-            List<PermissionInfo> permissionListDenied = (List<PermissionInfo>) lruMap.get("permissionListDenied");
-            if (permissionListDenied == null) {
-                permissionListDenied = new ArrayList<>();
-            }
+//            List<PermissionInfo> permissionListAccepted = (List<PermissionInfo>) lruMap.get("permissionListAccepted");
+//            if (permissionListAccepted == null) {
+//                permissionListAccepted = new ArrayList<>();
+//            }
+//            List<PermissionInfo> permissionListNeedReq = (List<PermissionInfo>) lruMap.get("permissionListNeedReq");
+//            if (permissionListNeedReq == null) {
+//                permissionListNeedReq = new ArrayList<>();
+//            }
+//            List<PermissionInfo> permissionListDenied = (List<PermissionInfo>) lruMap.get("permissionListDenied");
+//            if (permissionListDenied == null) {
+//                permissionListDenied = new ArrayList<>();
+//            }
 
-            boolean isChange = false;
-            PermissionInfo permissionInfo;
-            if (mPermissionListAccepted.size() > 0) {
-                for (int i = 0; i < mPermissionListAccepted.size(); i++) {
-                    permissionInfo = mPermissionListAccepted.get(i);
-                    CommonUtil.listAdd(permissionListAccepted, permissionInfo);
-                    CommonUtil.listRemove(permissionListNeedReq, permissionInfo);
-                    CommonUtil.listRemove(permissionListDenied, permissionInfo);
-                }
-                isChange = true;
-            }
-            if (mPermissionListNeedReq.size() > 0) {
-                for (int i = 0; i < mPermissionListNeedReq.size(); i++) {
-                    permissionInfo = mPermissionListNeedReq.get(i);
-                    CommonUtil.listRemove(permissionListAccepted, permissionInfo);
-                    CommonUtil.listAdd(permissionListNeedReq, permissionInfo);
-                    CommonUtil.listRemove(permissionListDenied, permissionInfo);
-                }
-                isChange = true;
-            }
-            if (mPermissionListDenied.size() > 0) {
-                for (int i = 0; i < mPermissionListDenied.size(); i++) {
-                    permissionInfo = mPermissionListDenied.get(i);
-                    CommonUtil.listRemove(permissionListAccepted, permissionInfo);
-                    CommonUtil.listRemove(permissionListNeedReq, permissionInfo);
-                    CommonUtil.listAdd(permissionListDenied, permissionInfo);
-                }
-                isChange = true;
-            }
-            if (isChange) {
-                lruMap.put("permissionListAccepted", permissionListAccepted);
-                lruMap.put("permissionListNeedReq", permissionListNeedReq);
-                lruMap.put("permissionListDenied", permissionListDenied);
-            }
+//            boolean isChange = false;
+//            PermissionInfo permissionInfo;
+//            if (mPermissionListAccepted.size() > 0) {
+//                for (int i = 0; i < mPermissionListAccepted.size(); i++) {
+//                    permissionInfo = mPermissionListAccepted.get(i);
+//                    CommonUtil.listAdd(permissionListAccepted, permissionInfo);
+//                    CommonUtil.listRemove(permissionListNeedReq, permissionInfo);
+//                    CommonUtil.listRemove(permissionListDenied, permissionInfo);
+//                }
+//                isChange = true;
+//            }
+//            if (mPermissionListNeedReq.size() > 0) {
+//                for (int i = 0; i < mPermissionListNeedReq.size(); i++) {
+//                    permissionInfo = mPermissionListNeedReq.get(i);
+//                    CommonUtil.listRemove(permissionListAccepted, permissionInfo);
+//                    CommonUtil.listAdd(permissionListNeedReq, permissionInfo);
+//                    CommonUtil.listRemove(permissionListDenied, permissionInfo);
+//                }
+//                isChange = true;
+//            }
+//            if (mPermissionListDenied.size() > 0) {
+//                for (int i = 0; i < mPermissionListDenied.size(); i++) {
+//                    permissionInfo = mPermissionListDenied.get(i);
+//                    CommonUtil.listRemove(permissionListAccepted, permissionInfo);
+//                    CommonUtil.listRemove(permissionListNeedReq, permissionInfo);
+//                    CommonUtil.listAdd(permissionListDenied, permissionInfo);
+//                }
+//                isChange = true;
+//            }
+//            if (isChange) {
+//                lruMap.put("permissionListAccepted", permissionListAccepted);
+//                lruMap.put("permissionListNeedReq", permissionListNeedReq);
+//                lruMap.put("permissionListDenied", permissionListDenied);
+//            }
 
 //            mPermissionListNeedReq = permissionListNeedReq;
 //            int needReqSize = mPermissionListNeedReq.size();
@@ -496,13 +503,16 @@ public class DynamicPermissionManager {
 //                return;
 //            }
 
-            LogUtil.i("permissionListAccepted -> " + permissionListAccepted);
-            LogUtil.i("permissionListNeedReq -> " + permissionListNeedReq);
-            LogUtil.i("permissionListDenied -> " + permissionListDenied);
+//            LogUtil.i("permissionListAccepted -> " + permissionListAccepted);
+//            LogUtil.i("permissionListNeedReq -> " + permissionListNeedReq);
+//            LogUtil.i("permissionListDenied -> " + permissionListDenied);
+            LogUtil.i("mPermissionListAccepted -> " + mPermissionListAccepted);
+            LogUtil.i("mPermissionListNeedReq -> " + mPermissionListNeedReq);
+            LogUtil.i("mPermissionListDenied -> " + mPermissionListDenied);
 
-            mPermissionListAccepted = permissionListAccepted;
-            mPermissionListNeedReq = permissionListNeedReq;
-            mPermissionListDenied = permissionListDenied;
+//            mPermissionListAccepted = permissionListAccepted;
+//            mPermissionListNeedReq = permissionListNeedReq;
+//            mPermissionListDenied = permissionListDenied;
 
             Runnable requestPermissionsRunnable = (Runnable) lruMap.get("requestPermissionsRunnable");
 
@@ -530,7 +540,7 @@ public class DynamicPermissionManager {
                         }
 
                         if (requestPermissionsRunnable != null) {
-                            DialogFractory.closeProgressDialog(CcmtApplication.application);
+                            DialogFractory.closeProgressDialog(context);
                         }
                     })
 //                    .setOnDismissListener(dialog13 -> DynamicPermissionManager.sIsShouldGoToAppSetting = isConfirm[0])
@@ -538,16 +548,16 @@ public class DynamicPermissionManager {
 
             int deniedSize = mPermissionListDenied.size();
             if (deniedSize > 0) {
-                mPermissions = new String[deniedSize];
-                for (int i = 0; i < deniedSize; i++) {
-                    mPermissions[i] = mPermissionListDenied.get(i).getName();
-                }
+//                mPermissions = new String[deniedSize];
+//                for (int i = 0; i < deniedSize; i++) {
+//                    mPermissions[i] = mPermissionListDenied.get(i).getName();
+//                }
 
                 lruMap.put("isShowPermissionsDialog", true);
                 if (requestPermissionsRunnable == null) {
-                    if (sIsShouldGoToAppSetting != null) {
-                        dialog.show();
-                    }
+//                    if (sIsShouldGoToAppSetting != null) {
+                    dialog.show();
+//                    }
                 }
             }
 
@@ -556,12 +566,12 @@ public class DynamicPermissionManager {
             if (mPermissionResultCallBack != null) {
                 if (mPermissionListDenied.size() != 0) {
                     onPermissionDenied(mPermissionListDenied);
-                    isAllGranted = false;
+//                    isAllGranted = false;
                 }
 
                 if (mPermissionListNeedReq.size() != 0) {
                     onRationalShow(mPermissionListNeedReq);
-                    isAllGranted = false;
+//                    isAllGranted = false;
                 }
 
                 if (mPermissionListAccepted.size() != 0) {
@@ -582,9 +592,9 @@ public class DynamicPermissionManager {
 //                }
 //            }
 
-            lruMap.remove("permissionListAccepted");
-            lruMap.remove("permissionListNeedReq");
-            lruMap.remove("permissionListDenied");
+//            lruMap.remove("permissionListAccepted");
+//            lruMap.remove("permissionListNeedReq");
+//            lruMap.remove("permissionListDenied");
 
             if (lruMap.get("requestPermissionsRunnable") == null) {
                 lruMap.remove("isReturnDialog");
@@ -597,7 +607,7 @@ public class DynamicPermissionManager {
                 lruMap.put("permissionsDialog", dialog);
 
                 if (deniedSize == 0) {
-                    DialogFractory.closeProgressDialog(CcmtApplication.application);
+                    DialogFractory.closeProgressDialog(context);
                 }
             }
         }

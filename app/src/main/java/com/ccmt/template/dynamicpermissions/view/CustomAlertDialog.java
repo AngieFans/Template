@@ -1,4 +1,4 @@
-package com.ccmt.template.view;
+package com.ccmt.template.dynamicpermissions.view;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -25,10 +25,11 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.ccmt.library.util.LogUtil;
 import com.ccmt.library.util.ViewUtil;
 import com.ccmt.template.R;
 import com.ccmt.template.dynamicpermissions.DynamicPermissionManager;
-import com.ccmt.template.util.DialogFractory;
+import com.ccmt.template.dynamicpermissions.util.DialogFractory;
 import com.ccmt.template.util.DimenUtils;
 
 import static android.view.View.GONE;

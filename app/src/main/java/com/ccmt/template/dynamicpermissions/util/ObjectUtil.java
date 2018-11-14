@@ -1,7 +1,7 @@
-package com.ccmt.template.util;
+package com.ccmt.template.dynamicpermissions.util;
 
-import com.ccmt.template.dynamicpermissions.DynamicPermissionManager;
 import com.ccmt.library.lru.LruMap;
+import com.ccmt.template.dynamicpermissions.DynamicPermissionManager;
 
 public class ObjectUtil {
 

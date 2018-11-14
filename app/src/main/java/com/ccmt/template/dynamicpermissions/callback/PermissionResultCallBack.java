@@ -1,16 +1,26 @@
 package com.ccmt.template.dynamicpermissions.callback;
 
+import com.ccmt.template.dynamicpermissions.PermissionInfo;
+
+import java.util.List;
+
 public interface PermissionResultCallBack {
 
     /**
      * 弹出了授权对话框
+     *
+     * @param mPermissionListNeedReq
      */
-    void onPermissionDialogShow();
+    @SuppressWarnings("JavaDoc")
+    void onHasPermissionRational(List<PermissionInfo> mPermissionListNeedReq);
 
     /**
      * 有权限被拒绝,且被勾选了不再提醒选项.
+     *
+     * @param mPermissionListDenied
      */
-    void onHasPermissionDenied();
+    @SuppressWarnings("JavaDoc")
+    void onHasPermissionDenied(List<PermissionInfo> mPermissionListDenied);
 
     /**
      * 当所有权限的申请被用户同意之后,该方法会被调用

@@ -12,13 +12,15 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.ccmt.library.util.LogUtil;
 import com.ccmt.library.util.ThreadManager;
 import com.ccmt.template.CcmtApplication;
 import com.ccmt.template.R;
+import com.ccmt.template.dynamicpermissions.activity.ProgressbarActivity;
 import com.ccmt.template.fragment.AbstractFragment;
 import com.ccmt.template.statusbar.StatusBarCompat;
 import com.ccmt.template.util.NavigationBarManager;
-import com.ccmt.template.util.ObjectUtil;
+import com.ccmt.template.dynamicpermissions.util.ObjectUtil;
 import com.ccmt.template.view.TitleView;
 
 import java.lang.ref.WeakReference;

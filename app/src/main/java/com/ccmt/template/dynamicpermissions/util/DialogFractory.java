@@ -1,4 +1,4 @@
-package com.ccmt.template.util;
+package com.ccmt.template.dynamicpermissions.util;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -7,13 +7,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.ccmt.library.lru.LruMap;
+import com.ccmt.library.util.LogUtil;
 import com.ccmt.template.R;
-import com.ccmt.template.activity.ProgressbarActivity;
 import com.ccmt.template.dynamicpermissions.DynamicPermissionManager;
-import com.ccmt.template.view.CustomAlertDialog;
+import com.ccmt.template.dynamicpermissions.activity.ProgressbarActivity;
+import com.ccmt.template.util.MyAnimationDrawable;
+import com.ccmt.template.dynamicpermissions.view.CustomAlertDialog;
 
 import java.io.Serializable;
 
@@ -59,7 +60,7 @@ public class DialogFractory {
                 .setGlobalDialog(!(context instanceof Activity))
                 .create();
         customAlertDialog.setOnShowListener(dialog -> myAnimationDrawable
-                .animateRawManuallyFromXML(R.drawable.bees_loading_anim_list, ((ImageView) view.findViewById(R.id.iv_loading)),
+                .animateRawManuallyFromXML(R.drawable.bees_loading_anim_list, view.findViewById(R.id.iv_loading),
                         null, null, true));
         sDialog = customAlertDialog;
         sDialog.show();
